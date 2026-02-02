@@ -543,7 +543,7 @@ const publicPath = process.env.NODE_ENV === 'production'
 app.use(express.static(publicPath));
 
 // SPA catch-all - serve index.html for all non-API routes
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
