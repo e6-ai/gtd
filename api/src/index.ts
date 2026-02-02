@@ -547,7 +547,8 @@ app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`GTD API server running on http://localhost:${PORT}`);
+// Start server - bind to 0.0.0.0 for Docker
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(Number(PORT), HOST, () => {
+  console.log(`GTD API server running on http://${HOST}:${PORT}`);
 });
