@@ -43,8 +43,4 @@ ENV DB_PATH=/app/api/data/gtd.db
 # Single port for both API and static files
 EXPOSE 3001
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
-
 CMD ["/app/start.sh"]
