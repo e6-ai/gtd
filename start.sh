@@ -2,15 +2,10 @@
 set -e
 
 echo "Starting GTD app..."
-echo "Node version: $(node --version)"
-echo "Working directory: $(pwd)"
-echo "API files:"
-ls -la /app/api/dist/ || echo "No dist folder!"
 
-# Start API server in background with logging
+# Start API server in background on port 3001 explicitly
 cd /app/api
-echo "Starting API server..."
-node dist/index.js 2>&1 &
+PORT=3001 node dist/index.js &
 API_PID=$!
 
 # Give API time to start
@@ -24,6 +19,5 @@ fi
 
 echo "API server started (PID: $API_PID)"
 
-# Start frontend static server (foreground)
-echo "Starting frontend server..."
-serve -s /app/public -l 3000
+# Start frontend static server on port 3000
+exec serve -s /app/public -l 3000
