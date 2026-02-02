@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  gtd:
+    build: .
+    ports:
+      - "3000:3000"  # Frontend
+      - "3001:3001"  # API
+    volumes:
+      - gtd-data:/app/api/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DB_PATH=/app/api/data/gtd.db
+    restart: unless-stopped
+
+volumes:
+  gtd-data:
