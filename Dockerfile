@@ -25,11 +25,8 @@ RUN cd api && npm install --omit=dev
 # Copy built API
 COPY --from=api-builder /app/api/dist ./api/dist
 
-# Copy built frontend
+# Copy built frontend to public
 COPY --from=frontend-builder /app/frontend/dist ./public
-
-# Install serve globally
-RUN npm install -g serve
 
 # Create data directory for SQLite
 RUN mkdir -p /app/api/data
@@ -43,11 +40,11 @@ ENV NODE_ENV=production
 ENV PORT=3001
 ENV DB_PATH=/app/api/data/gtd.db
 
-# Expose ports
-EXPOSE 3000 3001
+# Single port for both API and static files
+EXPOSE 3001
 
-# Health check - longer start period for cold start
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
 
 CMD ["/app/start.sh"]

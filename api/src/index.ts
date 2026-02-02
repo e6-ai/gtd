@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { v4 as uuid } from 'uuid';
 import { db, parseJsonColumn, stringifyJsonColumn } from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -529,6 +534,17 @@ app.patch('/api/settings', (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Serve static files from public directory (in production)
+const publicPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, '../../public')  // /app/api/dist -> /app/public
+  : path.join(__dirname, '../../frontend/dist');
+app.use(express.static(publicPath));
+
+// SPA catch-all - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 // Start server
